@@ -1,0 +1,163 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: theatre-postgres
+    environment:
+      POSTGRES_USER: theatre
+      POSTGRES_PASSWORD: theatre_pass
+      POSTGRES_DB: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./infra/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U theatre -d postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks:
+      - theatre-net
+    restart: unless-stopped
+
+  user-service:
+    build:
+      context: .
+      dockerfile: user-service/Dockerfile
+    container_name: theatre-user-service
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: users_db
+      DB_USER: theatre
+      DB_PASSWORD: theatre_pass
+      JWT_SECRET: ${JWT_SECRET:-change-me-to-a-very-long-random-secret-key-at-least-256-bits-long-please}
+      JWT_EXPIRATION_MS: 3600000
+    ports:
+      - "8081:8081"
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8081/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    networks:
+      - theatre-net
+    restart: unless-stopped
+
+  theatre-service:
+    build:
+      context: .
+      dockerfile: theatre-service/Dockerfile
+    container_name: theatre-theatre-service
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: theatre_db
+      DB_USER: theatre
+      DB_PASSWORD: theatre_pass
+      JWT_SECRET: ${JWT_SECRET:-change-me-to-a-very-long-random-secret-key-at-least-256-bits-long-please}
+      INTERNAL_SERVICE_TOKEN: ${INTERNAL_SERVICE_TOKEN:-dev-internal-token-change-me-in-production}
+    ports:
+      - "8082:8082"
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8082/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    networks:
+      - theatre-net
+    restart: unless-stopped
+
+  booking-service:
+    build:
+      context: .
+      dockerfile: booking-service/Dockerfile
+    container_name: theatre-booking-service
+    depends_on:
+      postgres:
+        condition: service_healthy
+      theatre-service:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: booking_db
+      DB_USER: theatre
+      DB_PASSWORD: theatre_pass
+      JWT_SECRET: ${JWT_SECRET:-change-me-to-a-very-long-random-secret-key-at-least-256-bits-long-please}
+      INTERNAL_SERVICE_TOKEN: ${INTERNAL_SERVICE_TOKEN:-dev-internal-token-change-me-in-production}
+      # Internal Docker network DNS — service name = hostname
+      THEATRE_SERVICE_URL: http://theatre-service:8082
+    ports:
+      - "8083:8083"
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8083/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    networks:
+      - theatre-net
+    restart: unless-stopped
+
+  api-gateway:
+    build:
+      context: .
+      dockerfile: api-gateway/Dockerfile
+    container_name: theatre-api-gateway
+    depends_on:
+      user-service:
+        condition: service_healthy
+      theatre-service:
+        condition: service_healthy
+      booking-service:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      JWT_SECRET: ${JWT_SECRET:-change-me-to-a-very-long-random-secret-key-at-least-256-bits-long-please}
+      USER_SERVICE_URL: http://user-service:8081
+      THEATRE_SERVICE_URL: http://theatre-service:8082
+      BOOKING_SERVICE_URL: http://booking-service:8083
+    ports:
+      - "8080:8080"
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    networks:
+      - theatre-net
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: theatre-frontend
+    depends_on:
+      api-gateway:
+        condition: service_healthy
+    ports:
+      - "5173:80"
+    networks:
+      - theatre-net
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+
+networks:
+  theatre-net:
+    driver: bridge

@@ -1,0 +1,45 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: theatre-service
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:theatre_db}
+    username: ${DB_USER:theatre}
+    password: ${DB_PASSWORD:theatre_pass}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    open-in-view: false
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    locations: classpath:db/migration
+
+app:
+  security:
+    jwt:
+      # Must match user-service JWT_SECRET
+      secret: ${JWT_SECRET:change-me-to-a-very-long-random-secret-key-at-least-256-bits-long-please}
+      issuer: theatre-system
+    # Shared with booking-service for service-to-service calls
+    internal-token: ${INTERNAL_SERVICE_TOKEN:dev-internal-token-change-me-in-production}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+
+logging:
+  level:
+    com.theatre.theatre: INFO
