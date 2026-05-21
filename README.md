@@ -18,12 +18,34 @@
 <br/>
 
 <!-- Replace this with your own demo GIF/screenshot when you deploy -->
-<img src="Booking_System.gif" width="600" alt="Theatre marquee animation"/>
+<div align="center">
 
-<br/><br/>
+  <img 
+    src="Booking_System.gif" 
+    width="700" 
+    alt="Theatre marquee animation"
+  />
 
-<a href="https://theatre-system.netlify.app" target="_blank"><b>Go Live</b></a>
+  <br/><br/>
 
+  <a 
+    href="https://theatre-system.netlify.app" 
+    target="_blank"
+    style="
+      font-size: 20px;
+      font-weight: bold;
+      text-decoration: none;
+      padding: 12px 24px;
+      border-radius: 10px;
+      background-color: #ff4b2b;
+      color: white;
+      display: inline-block;
+    "
+  >
+    🎭 GO LIVE
+  </a>
+
+</div>
 </div>
 
 ---
