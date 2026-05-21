@@ -20,7 +20,7 @@
 <!-- Replace this with your own demo GIF/screenshot when you deploy -->
 <img src="Booking_System.gif" width="600" alt="Theatre marquee animation"/>
 
-<br/>
+<br/><br/>
 
 <a href="https://theatre-system.netlify.app" target="_blank"><b>GO LIVE</b></a>
 
