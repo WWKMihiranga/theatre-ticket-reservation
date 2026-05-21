@@ -20,4 +20,4 @@ USER spring:spring
 COPY --from=builder /build/booking-service/target/*.jar app.jar
 
 EXPOSE 8083
-ENTRYPOINT ["java", "-jar", "/app/app.jar"]
+ENTRYPOINT ["java", "-Xmx300m", "-XX:+UseSerialGC", "-jar", "/app/app.jar"]

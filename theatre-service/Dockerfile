@@ -20,4 +20,4 @@ USER spring:spring
 COPY --from=builder /build/theatre-service/target/*.jar app.jar
 
 EXPOSE 8082
-ENTRYPOINT ["java", "-jar", "/app/app.jar"]
+ENTRYPOINT ["java", "-Xmx300m", "-XX:+UseSerialGC", "-jar", "/app/app.jar"]

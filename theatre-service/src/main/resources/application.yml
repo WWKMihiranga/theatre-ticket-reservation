@@ -5,7 +5,7 @@ spring:
   application:
     name: theatre-service
   datasource:
-    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:theatre_db}
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:theatre_db}?sslmode=require
     username: ${DB_USER:theatre}
     password: ${DB_PASSWORD:theatre_pass}
     driver-class-name: org.postgresql.Driver
