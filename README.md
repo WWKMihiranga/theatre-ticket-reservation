@@ -22,6 +22,10 @@
 
 <br/>
 
+<a href="https://theatre-system.netlify.app" target="_blank"><b>GO LIVE</b></a>
+
+<br/>
+
 </div>
 
 ---
