@@ -20,30 +20,16 @@
 <!-- Replace this with your own demo GIF/screenshot when you deploy -->
 <div align="center">
 
-  <img 
-    src="Booking_System.gif" 
-    width="700" 
-    alt="Theatre marquee animation"
-  />
+<img src="Booking_System.gif" width="700" alt="Theatre marquee animation"/>
 
-  <br/><br/>
+<br/>
+<br/>
 
-  <a 
-    href="https://theatre-system.netlify.app" 
-    target="_blank"
-    style="
-      font-size: 20px;
-      font-weight: bold;
-      text-decoration: none;
-      padding: 12px 24px;
-      border-radius: 10px;
-      background-color: #ff4b2b;
-      color: white;
-      display: inline-block;
-    "
-  >
-    🎭 GO LIVE
-  </a>
+<a href="https://theatre-system.netlify.app" target="_blank">
+
+<img src="https://img.shields.io/badge/🎭_GO_LIVE-fff?style=for-the-badge&logo=google-chrome&logoColor=black"/>
+
+</a>
 
 </div>
 </div>
