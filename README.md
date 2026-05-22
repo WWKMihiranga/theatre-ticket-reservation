@@ -40,11 +40,9 @@
 
 > **In one line:** A full-stack web app where customers browse upcoming theatre shows, pick their seats from a visual seat map, pay, and manage their bookings - built with the same architecture patterns used by real-world ticketing platforms like BookMyShow and Ticketmaster.
 
-### 👤 For non-technical visitors
-
 Imagine you want to watch a play this weekend. You open the website, see what's showing, pick the show you like, look at the theatre's seat map, choose a seat (front row is pricier, back row is cheaper), and book it. The system makes sure no two people can book the same seat at the same time, lets you cancel if your plans change, and shows admins a separate panel to add new shows. **That's exactly what this project does - end-to-end.**
 
-### 👨‍💻 For technical visitors
+### 👨‍💻 Let's Deep Dive Into
 
 A **microservices** application that decomposes a monolithic ticketing system into four independent Spring Boot services behind an API Gateway:
 
@@ -188,8 +186,8 @@ Everything else (Java, Maven, Node, Postgres) runs inside containers.
 ### Run the whole stack
 
 ```bash
-git clone https://github.com/<your-username>/theatre-system.git
-cd theatre-system
+git clone https://github.com/WWKMihiranga/theatre-ticket-reservation.git
+cd theatre-ticket-reservation
 docker compose up --build
 ```
 
